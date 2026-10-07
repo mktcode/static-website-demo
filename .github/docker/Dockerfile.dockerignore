@@ -1,0 +1,10 @@
+# Only send website sources and build files to Docker.
+**
+!index.html
+!content/
+!content/**
+!.github/
+!.github/docker/
+!.github/docker/Dockerfile
+!.github/docker/build.py
+!.github/docker/requirements.txt

@@ -6,6 +6,8 @@ on:
     paths:
       - 'content/**'
       - 'index.html'
+      - '.github/docker/**'
+      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -21,43 +23,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v7
-        with:
-          python-version: '3.12'
+      - name: Build website image
+        run: docker build -f .github/docker/Dockerfile -t website:pages .
 
-      - name: Install Markdown parser in runner only
-        run: python -m pip install Markdown==3.7
-
-      - name: Render Markdown into HTML
+      - name: Extract generated website
         run: |
-          python <<'PY'
-          from pathlib import Path
-          import re
-          import shutil
-          import markdown
-
-          content = Path('content')
-          output = Path('_site')
-          output.mkdir()
-          template = Path('index.html').read_text(encoding='utf-8')
-
-          def render(match):
-              source = content / f'{match.group(1)}.md'
-              if not source.is_file():
-                  raise FileNotFoundError(f'Missing Markdown file: {source}')
-              return markdown.markdown(
-                  source.read_text(encoding='utf-8'),
-                  extensions=['extra', 'sane_lists'],
-                  output_format='html',
-              )
-
-          html = re.sub(r'\{\{\s*([a-zA-Z0-9_-]+)\s*\}\}', render, template)
-          if '{{' in html or '}}' in html:
-              raise ValueError('Unresolved template placeholder in generated HTML')
-
-          (output / 'index.html').write_text(html, encoding='utf-8')
-          shutil.copytree(content / 'media', output / 'content' / 'media')
-          PY
+          container=$(docker create website:pages)
+          trap 'docker rm "$container"' EXIT
+          mkdir -p _site
+          docker cp "$container:/usr/share/nginx/html/." _site/
 
       - uses: actions/upload-pages-artifact@v5
         with:
