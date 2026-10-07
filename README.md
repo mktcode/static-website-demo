@@ -2,7 +2,9 @@
 
 Demo-Website: https://mktcode.github.io/static-website-demo/
 
-## 1. Text ändern
+## 1. Inhalte ändern
+
+### 1.1 Text ändern
 
 Öffne `content/engineering-principles.md` und klicke auf das **Stift-Symbol** oben rechts. Ändere den Text und prüfe ihn unter **Preview**.
 
@@ -14,7 +16,7 @@ Die Formatierung ist einfach:
 Ein Absatz mit **fettem** und *kursivem* Text.
 ```
 
-## 2. Bild ändern
+### 1.2 Bild ändern
 
 Öffne den Ordner `content/media` und klicke oben rechts auf **Add file → Upload files**.
 
@@ -22,7 +24,8 @@ Wähle das neue Bild auf deinem Computer aus oder ziehe es in das Upload-Feld. B
 
 > Neue Dateien, mit anderen Dateinamen, werden ohne Anpassung der HTML-Datei nicht automatisch auf der Website verwendet.
 
-## 3. Änderung speichern
+
+## 2. Änderung speichern
 
 Klicke auf **Commit changes…** und beschreibe kurz deine Änderung, zum Beispiel „Einleitung überarbeitet“.
 
