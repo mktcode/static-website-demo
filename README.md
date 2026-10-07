@@ -30,7 +30,7 @@ Klicke auf **Commit changes…** und beschreibe kurz deine Änderung, zum Beispi
 
 Wähle **Commit directly to the main branch** und bestätige.
 
-Die Änderung wird automatisch nach wenigen Minuten auf der Website veröffentlicht, sofern der Workflow erfolgreich durchläuft.
+Die Änderung wird automatisch nach wenigen Sekunden/Minuten auf der Website veröffentlicht, sofern der Workflow erfolgreich durchläuft.
 
 ### Erst prüfen lassen
 
