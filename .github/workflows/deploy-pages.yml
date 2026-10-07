@@ -3,6 +3,9 @@ name: Build and deploy GitHub Pages
 on:
   push:
     branches: [main]
+    paths:
+      - 'content/**'
+      - 'index.html'
   workflow_dispatch:
 
 permissions:
