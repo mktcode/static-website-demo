@@ -12,7 +12,15 @@ Die Formatierung ist einfach:
 Ein Absatz mit **fettem** und *kursivem* Text.
 ```
 
-## 2. Änderung speichern
+## 2. Bild ändern
+
+Öffne den Ordner `content/media` und klicke oben rechts auf **Add file → Upload files**.
+
+Wähle das neue Bild auf deinem Computer aus oder ziehe es in das Upload-Feld. Bei gleichem Dateinamen (z.B. `hero.jpg` wird das bisherige Bild ersetzt.
+
+> Neue Dateien, mit anderen Dateinamen, werden ohne Anpassung der HTML-Datei nicht automatisch auf der Website verwendet.
+
+## 3. Änderung speichern
 
 Klicke auf **Commit changes…** und beschreibe kurz deine Änderung, zum Beispiel „Einleitung überarbeitet“.
 
