@@ -2,7 +2,7 @@
 
 ## 1. Text ändern
 
-Öffne `content/engineering-principles.md` und klicke auf das **Stift-Symbol**. Ändere den Text und prüfe ihn unter **Preview**.
+Öffne `content/engineering-principles.md` und klicke auf das **Stift-Symbol** oben rechts. Ändere den Text und prüfe ihn unter **Preview**.
 
 Die Formatierung ist einfach:
 
