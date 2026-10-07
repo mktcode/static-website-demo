@@ -1,0 +1,76 @@
+name: Build and deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Markdown parser in runner only
+        run: python -m pip install Markdown==3.7
+
+      - name: Render Markdown into HTML
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+          import shutil
+          import markdown
+
+          content = Path('content')
+          output = Path('_site')
+          output.mkdir()
+          template = Path('index.html').read_text(encoding='utf-8')
+
+          def render(match):
+              source = content / f'{match.group(1)}.md'
+              if not source.is_file():
+                  raise FileNotFoundError(f'Missing Markdown file: {source}')
+              return markdown.markdown(
+                  source.read_text(encoding='utf-8'),
+                  extensions=['extra', 'sane_lists'],
+                  output_format='html',
+              )
+
+          html = re.sub(r'\{\{\s*([a-zA-Z0-9_-]+)\s*\}\}', render, template)
+          if '{{' in html or '}}' in html:
+              raise ValueError('Unresolved template placeholder in generated HTML')
+
+          (output / 'index.html').write_text(html, encoding='utf-8')
+          shutil.copytree(content / 'media', output / 'content' / 'media')
+          PY
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
