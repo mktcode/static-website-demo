@@ -2,7 +2,7 @@
 title: Über uns
 ---
 
-Die FEG Textiltechnik Forschungs- und Entwicklungsgesellschaft mbH (FEG) wurde 1992 in Aachen gegründet und ist seitdem für außergewöhnliche Innovationen in der Textiltechnologie bekannt.
+Die **FEG Textiltechnik Forschungs- und Entwicklungsgesellschaft mbH (FEG)** wurde 1992 in Aachen gegründet und ist seitdem für außergewöhnliche Innovationen in der Textiltechnologie bekannt.
 
 Mit hoch motivierten und gut ausgebildeten Mitarbeitern, eigenen Forschungs- & Entwicklungskapazitäten und intelligenten Produktionsanlagen ist die FEG Textiltechnik heute Deutschlands führender Hersteller von medizinischen textilen Implantaten. Unter dem weltweit geschützten Markennamen **DynaMesh®** werden die preisgekrönten Implantate erfolgreich in viele Länder weltweit vertrieben.
 

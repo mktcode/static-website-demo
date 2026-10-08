@@ -2,7 +2,7 @@
 title: About us
 ---
 
-FEG Textiltechnik Forschungs- und Entwicklungsgesellschaft mbH (FEG) was established in Aachen in 1992 and since then has gained a reputation for exceptional innovations in the field of textile technology.
+**FEG Textiltechnik Forschungs- und Entwicklungsgesellschaft mbH (FEG)** was established in Aachen in 1992 and since then has gained a reputation for exceptional innovations in the field of textile technology.
 
 The company’s dedicated and highly qualified staff, in-house research and development capacities as well as intelligent production facilities combine to make FEG today’s leading manufacturer of textile surgical implants in Germany. Under the brand name **DynaMesh®**, an internationally protected trademark, FEG’s award-winning implants are successfully marketed in numerous countries around the world.
 
