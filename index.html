@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ locale }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DynaMesh – Engineering Principles Demo</title>
+  <title>{{ page_title }} – DynaMesh</title>
+  {{ alternate_links }}
   <style>
     :root { --yellow: #ffb600; --gray: #514f4e; }
     * { box-sizing: border-box; }
@@ -82,30 +83,26 @@
 </head>
 <body>
   <header class="header">
-    <a class="brand" href="#" aria-label="DynaMesh home">Dyna<span>Mesh</span><sup>®</sup></a>
-    <nav class="navigation" aria-label="Main navigation">
-      <a class="home" href="#" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 11 12 2l10 9-2 2-2-2v10h-5v-7h-3v7H5V11l-1 2z"/></svg></a>
-      <a href="#principles">About Us</a>
-      <a href="#principles">Our Technology</a>
-      <a href="#principles">For Healthcare Professionals</a>
-      <a href="#principles">For Patients</a>
-      <a href="#principles">Find Us</a>
+    <a class="brand" href="{{ home_href }}" aria-label="DynaMesh home">Dyna<span>Mesh</span><sup>®</sup></a>
+    <nav class="navigation" aria-label="{{ navigation_label }}">
+      {{ navigation }}
     </nav>
-    <span class="language" aria-label="Language: English"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="4" ry="10"/><path d="M2 12h20M4 6h16M4 18h16"/></svg>EN</span>
+    <nav class="language" aria-label="{{ language_label }}">{{ language_switch }}</nav>
   </header>
   <main>
     <section class="hero" aria-label="Our philosophy">
-      <img class="hero-image" src="content/media/hero.jpg" alt="Aerial view of a building with rooftop solar panels">
+      <img class="hero-image" src="{{ media_root }}/hero.jpg" alt="{{ hero_alt }}">
       <div class="hero-copy">
-        <p>Not every surgical challenge can be solved with the same implant.<br>We believe every indication deserves a solution engineered for its specific clinical requirements.<br>It’s the philosophy on which DynaMesh® was built—and one that continues to drive us today.</p>
-        <a class="button" href="#principles">find out more</a>
+        <p>{{ hero_copy }}</p>
+        <a class="button" href="#principles">{{ hero_button }}</a>
       </div>
     </section>
     <section class="principles" id="principles" aria-labelledby="principles-title">
       <div class="content">
         <div class="brand">Dyna<span>Mesh</span><sup>®</sup></div>
         <div id="principles-title">
-          {{ engineering-principles }}
+          <h1>{{ page_title }}</h1>
+          {{ page_content }}
         </div>
 
       </div>

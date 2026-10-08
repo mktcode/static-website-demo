@@ -4,10 +4,10 @@ WORKDIR /build
 COPY .github/docker/requirements.txt ./requirements.txt
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
-COPY .github/docker/build.py ./build.py
+COPY .github/docker/build.py .github/docker/test_build.py ./
 COPY index.html ./index.html
 COPY content/ ./content/
-RUN python build.py
+RUN python -m unittest test_build && python build.py
 
 FROM nginx:stable-alpine AS runtime
 

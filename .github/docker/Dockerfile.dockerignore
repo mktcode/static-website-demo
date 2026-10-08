@@ -7,4 +7,5 @@
 !.github/docker/
 !.github/docker/Dockerfile
 !.github/docker/build.py
+!.github/docker/test_build.py
 !.github/docker/requirements.txt

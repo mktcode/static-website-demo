@@ -1,44 +1,63 @@
-# Inhalte bearbeiten und veröffentlichen
+# Mehrsprachige DynaMesh-Website
 
-Demo-Website: https://mktcode.github.io/static-website-demo/
+Website: https://mktcode.github.io/static-website-demo/
 
-## 1. Inhalte ändern
+Redaktion: https://admin.feg.mktco.de/
 
-### 1.1 Text ändern
+## Seiten und Sprachen
 
-Öffne `content/engineering-principles.md` und klicke auf das **Stift-Symbol** oben rechts. Ändere den Text und prüfe ihn unter **Preview**.
+| Inhaltsdatei | URL relativ zur Website |
+| --- | --- |
+| `content/pages/en/index.md` | `/en/` |
+| `content/pages/de/index.md` | `/de/` |
+| `content/pages/en/about.md` | `/en/about/` |
+| `content/pages/de/about.md` | `/de/about/` |
 
-Die Formatierung ist einfach:
+Der Website-Einstieg leitet auf `en/` weiter. Auf GitHub Pages steht vor diesen Pfaden weiterhin `/static-website-demo`. Alle Navigations- und Medienlinks sind relativ, sodass derselbe Build auch unter einer eigenen Domain oder als Dokploy-Preview funktioniert.
+
+## Im CMS bearbeiten
+
+1. **Seiten** öffnen und einen vorhandenen Eintrag bearbeiten oder eine **neue Seite** anlegen.
+2. Titel und Markdown-Inhalt in Englisch und Deutsch eingeben. Übersetzungen sind im selben CMS-Eintrag verknüpft; der Dateiname/Slug ist in beiden Sprachen gleich.
+3. Speichern und zur Prüfung senden. Der Editorial Workflow erstellt einen Pull Request gegen `main`.
+4. Nach Review veröffentlichen. Erst der Merge nach `main` löst den Pages-Build aus.
+
+Alle veröffentlichten Seiten werden automatisch in der Navigation ihrer Sprache verlinkt. Der Sprachwechsel führt zur entsprechenden Übersetzung; fehlt sie, wird kein Link auf eine nicht existierende Seite angezeigt. Neue Übersetzungen werden zunächst angeboten, können im CMS aber deaktiviert werden.
+
+Die Hauptüberschrift kommt aus dem Feld **Titel**. Im Markdown-Inhalt deshalb mit `##` beginnen. Die Startseiten heißen fest **`index`**: nicht umbenennen oder entfernen. CMS-Löschungen sind für die Collection deaktiviert, damit die Startseiten nicht versehentlich gelöscht werden. Andere Seiten können mit einem geprüften GitHub-PR entfernt werden.
+
+## Direkt in GitHub bearbeiten
+
+Die Seiten enthalten YAML Front Matter und Markdown:
 
 ```markdown
-# Überschrift
+---
+title: Über uns
+---
 
-Ein Absatz mit **fettem** und *kursivem* Text.
+Hier steht ein Absatz mit **fettem** und *kursivem* Text.
+
+## Weitere Informationen
 ```
 
-### 1.2 Bild ändern
+Neue Seiten als `content/pages/en/<slug>.md` und gegebenenfalls `content/pages/de/<slug>.md` anlegen. Slugs: Kleinbuchstaben, Zahlen und Bindestriche. Änderungen über einen Branch und Pull Request gegen `main` prüfen lassen.
 
-Öffne den Ordner `content/media` und klicke oben rechts auf **Add file → Upload files**.
+**Migration:** `content/engineering-principles.md` bleibt als historische Datei erhalten, wird aber nicht mehr gerendert. Offene CMS-PRs für diese alte Datei vor dem Merge prüfen und deren Inhalte gegebenenfalls in die neuen `index.md`-Dateien übertragen. Die englische Startseite wurde aus dem aktuellen `main` übernommen; die deutsche Übersetzung ist ein initialer Entwurf und sollte fachlich geprüft werden.
 
-Wähle das neue Bild auf deinem Computer aus oder ziehe es in das Upload-Feld. Bei gleichem Dateinamen (z.B. `hero.jpg` wird das bisherige Bild ersetzt.
+## Bilder und Layout
 
-> Neue Dateien, mit anderen Dateinamen, werden ohne Anpassung der HTML-Datei nicht automatisch auf der Website verwendet.
+Gemeinsame Medien liegen in `content/media`. Markdown-Bilder verwenden beispielsweise `![Beschreibung](content/media/bild.jpg)`; der Build passt den Pfad an die Seitentiefe an. Das CMS schreibt genau solche relativen Medienpfade.
 
+Der Hero verwendet weiterhin fest `content/media/hero.jpg`. Dessen Austausch und Layoutänderungen erfolgen über GitHub. Die separate CMS-Medienbibliothek schreibt direkt nach `main`, nicht über den Editorial Workflow; für geprüfte Uploads den Inhaltseditor verwenden.
 
-## 2. Änderung speichern
+Alle Seiten verwenden die gemeinsame Vorlage `index.html` inklusive Hero und Footer. Hero-Texte, Navigation und Sprachsteuerung sind übersetzt. Die Produktnamen und der ausdrücklich deutsch markierte Footer bleiben gemeinsam/statisch. Weitere Sprachen müssen in CMS-Konfiguration und `LOCALES`/`COPY` in `.github/docker/build.py` ergänzt werden.
 
-Klicke auf **Commit changes…** und beschreibe kurz deine Änderung, zum Beispiel „Einleitung überarbeitet“.
+## Build und Tests
 
-### Direkt veröffentlichen
+```sh
+docker build -f .github/docker/Dockerfile -t dynamesh-website .
+docker run --rm -p 8080:80 dynamesh-website
+# http://localhost:8080/en/ und http://localhost:8080/de/
+```
 
-Wähle **Commit directly to the main branch** und bestätige.
-
-Die Änderung wird automatisch nach wenigen Sekunden/Minuten auf der Website veröffentlicht, sofern der Workflow erfolgreich durchläuft.
-
-### Erst prüfen lassen
-
-Wähle **Create a new branch … and start a pull request**. Ein Branch ist eine separate Arbeitsfassung, die noch nicht veröffentlicht wird.
-
-Vergib einen Namen, zum Beispiel `neue-einleitung`, und speichere. Erstelle anschließend über **Create pull request** einen Vorschlag zur Prüfung; das Ziel (**base**) muss `main` sein.
-
-Nach der Prüfung übernimmt die zuständige Person den Vorschlag mit **Merge pull request**. Erst dann startet die Veröffentlichung.
+Der Docker-Build führt sieben Regressionstests aus, bevor er die Website generiert. Der bestehende GitHub-Pages-Workflow nutzt dasselbe Dockerfile. Ungültige Slugs, fehlende Titel, leere Inhalte und fehlende Startseiten lassen den Build fehlschlagen.
