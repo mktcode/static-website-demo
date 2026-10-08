@@ -5,6 +5,7 @@ from pathlib import Path
 import posixpath
 import re
 import shutil
+from urllib.parse import quote
 
 import markdown
 import yaml
@@ -37,7 +38,33 @@ def read_page(source):
         raise ValueError(f"Missing title: {source}")
     if not match[2].strip():
         raise ValueError(f"Missing content: {source}")
-    return {"title": data["title"], "body": match[2]}
+    for field in ("hero_image", "hero_alt"):
+        if data.get(field) is not None and not isinstance(data[field], str):
+            raise ValueError(f"Invalid {field}: {source}")
+    return {
+        "title": data["title"], "body": match[2],
+        "hero_image": (data.get("hero_image") or "").strip(),
+        # None means absent: preserve the existing alt text for the default image.
+        "hero_alt": data.get("hero_alt"),
+    }
+
+
+def hero_values(root, page, locale, current):
+    image = page["hero_image"] or "content/media/hero.jpg"
+    parts = image.split("/")
+    if parts[:2] != ["content", "media"] or any(part in ("", ".", "..") for part in parts):
+        raise ValueError(f"Hero image must be inside content/media: {image}")
+    media = (root / "content/media").resolve()
+    source = (root / image).resolve()
+    if not source.is_relative_to(media) or not source.is_file():
+        raise ValueError(f"Missing or invalid hero image: {image}")
+    alt = page["hero_alt"]
+    if alt is None:
+        alt = COPY[locale]["hero_alt"] if image == "content/media/hero.jpg" else ""
+    return {
+        "hero_image": escape(quote(posixpath.relpath(image, current), safe="/")),
+        "hero_alt": escape(alt),
+    }
 
 
 def route(locale, slug):
@@ -86,6 +113,7 @@ def build(root=Path(".")):
         values = {
             **COPY[locale], "locale": locale, "page_title": escape(page["title"]),
             "page_content": body, "home_href": home, "media_root": media_root,
+            **hero_values(root, page, locale, current),
             "navigation": "\n      ".join(nav), "language_switch": " ".join(switches),
             "alternate_links": "\n  ".join(alternates),
         }

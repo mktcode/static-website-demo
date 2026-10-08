@@ -48,7 +48,16 @@ Neue Seiten als `content/pages/en/<slug>.md` und gegebenenfalls `content/pages/d
 
 Gemeinsame Medien liegen in `content/media`. Markdown-Bilder verwenden beispielsweise `![Beschreibung](content/media/bild.jpg)`; der Build passt den Pfad an die Seitentiefe an. Das CMS schreibt genau solche relativen Medienpfade.
 
-Der Hero verwendet weiterhin fest `content/media/hero.jpg`. Dessen Austausch und Layoutänderungen erfolgen über GitHub. Die separate CMS-Medienbibliothek schreibt direkt nach `main`, nicht über den Editorial Workflow; für geprüfte Uploads den Inhaltseditor verwenden.
+Im CMS gibt es pro Seite und Sprache ein **Hero-Bild** und eine **Bildbeschreibung (Alternativtext)**. Im Bildfeld eine Datei aus der Medienverwaltung auswählen oder hochladen. Englisch und Deutsch können unterschiedliche Bilder verwenden. Die Auswahl wird in der jeweiligen Markdown-Datei gespeichert:
+
+```yaml
+hero_image: content/media/banner-de.jpg
+hero_alt: Beschreibung des deutschen Banners
+```
+
+Ohne Auswahl bleibt `content/media/hero.jpg` das Standardbild. Ohne Alt-Feld erhält das Standardbild seine bisherige übersetzte Beschreibung; eigene Bilder ohne Beschreibung werden mit leerem Alternativtext ausgegeben. Ein bewusst leerer Alternativtext (`hero_alt: ''`) kennzeichnet ein dekoratives Bild. Bilder mit inhaltlich wichtigem Text bitte beschreiben.
+
+Die Bilder müssen in `content/media` vorhanden sein; fehlende Dateien oder Pfade außerhalb dieses Ordners lassen den Build fehlschlagen. Bildauswahl und Uploads innerhalb des Inhaltseditors laufen zusammen mit der Seite durch den Editorial Workflow. Die separate CMS-Medienbibliothek schreibt dagegen direkt nach `main`.
 
 Alle Seiten verwenden die gemeinsame Vorlage `index.html` inklusive Hero und Footer. Hero-Texte, Navigation und Sprachsteuerung sind übersetzt. Die Produktnamen und der ausdrücklich deutsch markierte Footer bleiben gemeinsam/statisch. Weitere Sprachen müssen in CMS-Konfiguration und `LOCALES`/`COPY` in `.github/docker/build.py` ergänzt werden.
 
@@ -60,4 +69,4 @@ docker run --rm -p 8080:80 dynamesh-website
 # http://localhost:8080/en/ und http://localhost:8080/de/
 ```
 
-Der Docker-Build führt sieben Regressionstests aus, bevor er die Website generiert. Der bestehende GitHub-Pages-Workflow nutzt dasselbe Dockerfile. Ungültige Slugs, fehlende Titel, leere Inhalte und fehlende Startseiten lassen den Build fehlschlagen.
+Der Docker-Build führt zwölf Regressionstests aus, bevor er die Website generiert. Der bestehende GitHub-Pages-Workflow nutzt dasselbe Dockerfile. Ungültige Slugs, fehlende Titel, leere Inhalte und fehlende Startseiten lassen den Build fehlschlagen.
