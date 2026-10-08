@@ -1,5 +1,7 @@
 ---
 title: About us
+hero_image: /content/media/hero-grey.jpg
+hero_alt: ''
 ---
 
 FEG Textiltechnik Forschungs- und Entwicklungsgesellschaft mbH (FEG) was established in Aachen in 1992 and since then has gained a reputation for exceptional innovations in the field of textile technology.
