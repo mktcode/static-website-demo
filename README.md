@@ -46,7 +46,7 @@ Neue Seiten als `content/pages/en/<slug>.md` und gegebenenfalls `content/pages/d
 
 ## Bilder und Layout
 
-Gemeinsame Medien liegen in `content/media`. Markdown-Bilder verwenden beispielsweise `![Beschreibung](content/media/bild.jpg)`; der Build passt den Pfad an die Seitentiefe an. Das CMS schreibt genau solche relativen Medienpfade.
+Gemeinsame Medien liegen in `content/media`. Markdown-Bilder verwenden beispielsweise `![Beschreibung](content/media/bild.jpg)`; der Build passt den Pfad an die Seitentiefe an. Sveltia kann diese Pfade auch mit führendem `/` speichern (`/content/media/bild.jpg`); der Build unterstützt beide Schreibweisen.
 
 Im CMS gibt es pro Seite und Sprache ein **Hero-Bild** und eine **Bildbeschreibung (Alternativtext)**. Im Bildfeld eine Datei aus der Medienverwaltung auswählen oder hochladen. Englisch und Deutsch können unterschiedliche Bilder verwenden. Die Auswahl wird in der jeweiligen Markdown-Datei gespeichert:
 
@@ -69,4 +69,4 @@ docker run --rm -p 8080:80 dynamesh-website
 # http://localhost:8080/en/ und http://localhost:8080/de/
 ```
 
-Der Docker-Build führt zwölf Regressionstests aus, bevor er die Website generiert. Der bestehende GitHub-Pages-Workflow nutzt dasselbe Dockerfile. Ungültige Slugs, fehlende Titel, leere Inhalte und fehlende Startseiten lassen den Build fehlschlagen.
+Der Docker-Build führt fünfzehn Regressionstests mit unabhängigen Testdaten aus, bevor er die Website generiert. Der bestehende GitHub-Pages-Workflow nutzt dasselbe Dockerfile. Ungültige Slugs, fehlende Titel, leere Inhalte und fehlende Startseiten lassen den Build fehlschlagen.

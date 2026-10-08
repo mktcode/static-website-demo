@@ -50,7 +50,9 @@ def read_page(source):
 
 
 def hero_values(root, page, locale, current):
-    image = page["hero_image"] or "content/media/hero.jpg"
+    # Sveltia may store root-relative URLs even with a relative public_folder.
+    # Remove exactly one slash; protocol-relative URLs (//host/...) stay invalid.
+    image = (page["hero_image"] or "content/media/hero.jpg").removeprefix("/")
     parts = image.split("/")
     if parts[:2] != ["content", "media"] or any(part in ("", ".", "..") for part in parts):
         raise ValueError(f"Hero image must be inside content/media: {image}")
@@ -109,7 +111,7 @@ def build(root=Path(".")):
         media_root = posixpath.relpath("content/media", current)
         body = markdown.markdown(page["body"], extensions=["extra", "sane_lists"], output_format="html")
         # CMS image URLs are relative to the shared media folder, not the page route.
-        body = re.sub(r'((?:src|href)=")content/media/', lambda m: m[1] + media_root + "/", body)
+        body = re.sub(r'((?:src|href)=")/?content/media/', lambda m: m[1] + media_root + "/", body)
         values = {
             **COPY[locale], "locale": locale, "page_title": escape(page["title"]),
             "page_content": body, "home_href": home, "media_root": media_root,

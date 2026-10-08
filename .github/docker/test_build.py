@@ -16,7 +16,13 @@ class BuildTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         shutil.copy("index.html", self.root / "index.html")
-        shutil.copytree("content", self.root / "content")
+        # Use deterministic fixtures, never the editor-maintained site content.
+        media = self.root / "content/media"
+        media.mkdir(parents=True)
+        (media / "hero.jpg").write_bytes(b"fixture image; the builder copies bytes unchanged")
+        for locale in ("en", "de"):
+            (self.root / "content/pages" / locale).mkdir(parents=True)
+            self.page(locale, "index", f"Homepage {locale}")
 
     def page(self, locale, slug, title="Test"):
         path = self.root / "content" / "pages" / locale / f"{slug}.md"
@@ -68,6 +74,31 @@ class BuildTests(unittest.TestCase):
             self.assertIn(f'alt="Image &quot;{locale}&quot; &amp; text"', html)
             self.assertTrue((self.root / "_site/content/media" / f"hero {locale}.jpg").is_file())
 
+    def test_sveltia_root_relative_hero_images(self):
+        shutil.copy(self.root / "content/media/hero.jpg", self.root / "content/media/hero-grey.jpg")
+        self.page("de", "about-us")
+        self.set_hero("en", "index", hero_image="/content/media/hero-grey.jpg")
+        self.set_hero("de", "about-us", hero_image="/content/media/hero-grey.jpg", hero_alt="Graues Bild")
+        build(self.root)
+        english = (self.root / "_site/en/index.html").read_text()
+        german = (self.root / "_site/de/about-us/index.html").read_text()
+        self.assertIn('src="../content/media/hero-grey.jpg"', english)
+        self.assertIn('src="../../content/media/hero-grey.jpg" alt="Graues Bild"', german)
+
+    def test_sveltia_root_relative_markdown_media(self):
+        path = self.root / "content/pages/en/index.md"
+        path.write_text('---\ntitle: Images\n---\n![Image](/content/media/hero.jpg)\n\n[Download](/content/media/hero.jpg)')
+        build(self.root)
+        html = (self.root / "_site/en/index.html").read_text()
+        self.assertIn('<img alt="Image" src="../content/media/hero.jpg">', html)
+        self.assertIn('href="../content/media/hero.jpg">Download</a>', html)
+
+    def test_hero_symlink_outside_media_rejected(self):
+        (self.root / "content/media/outside.jpg").symlink_to(self.root / "index.html")
+        self.set_hero("en", "index", hero_image="/content/media/outside.jpg")
+        with self.assertRaisesRegex(ValueError, "Missing or invalid hero image"):
+            build(self.root)
+
     def test_empty_image_falls_back_and_empty_alt_is_preserved(self):
         self.set_hero("en", "index", hero_image="", hero_alt="")
         self.set_hero("de", "index", hero_image=None, hero_alt=None)
@@ -83,7 +114,10 @@ class BuildTests(unittest.TestCase):
             build(self.root)
 
     def test_hero_image_outside_media_rejected(self):
-        for image in ("content/media/../pages/en/index.md", "https://example.com/image.jpg"):
+        for image in (
+            "content/media/../pages/en/index.md", "/content/media/../pages/en/index.md",
+            "https://example.com/image.jpg", "//example.com/image.jpg", "/etc/passwd",
+        ):
             with self.subTest(image=image):
                 self.set_hero("en", "index", hero_image=image)
                 with self.assertRaisesRegex(ValueError, "must be inside content/media"):
