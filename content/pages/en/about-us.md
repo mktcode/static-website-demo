@@ -1,5 +1,5 @@
 ---
-title: About us
+title: About Us
 hero_image: /content/media/hero-grey.jpg
 hero_alt: ''
 ---
