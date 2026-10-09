@@ -1,5 +1,5 @@
 ---
-title: Entwicklungsprinzipien
+title: Entwicklungsprinzipien bei FEG
 hero_image: /content/media/hero.jpg
 hero_alt: ''
 ---
