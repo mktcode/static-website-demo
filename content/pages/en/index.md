@@ -1,5 +1,5 @@
 ---
-title: Engineering Principles at FEG
+title: Engineering Principles
 hero_image: /content/media/hero.jpg
 hero_alt: ''
 ---
