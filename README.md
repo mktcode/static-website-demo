@@ -1,8 +1,8 @@
-# Mehrsprachige DynaMesh-Website
+# Mehrsprachige statische Website
 
 Website: https://mktcode.github.io/static-website-demo/
 
-Redaktion: https://admin.feg.mktco.de/
+Redaktion: unter der separat konfigurierten Admin-Domain erreichbar.
 
 ## Seiten und Sprachen
 
@@ -61,12 +61,20 @@ Die Bilder müssen in `content/media` vorhanden sein; fehlende Dateien oder Pfad
 
 Alle Seiten verwenden die gemeinsame Vorlage `index.html` inklusive Hero und Footer. Hero-Texte, Navigation und Sprachsteuerung sind übersetzt. Die Produktnamen und der ausdrücklich deutsch markierte Footer bleiben gemeinsam/statisch. Weitere Sprachen müssen in CMS-Konfiguration und `LOCALES`/`COPY` in `.github/docker/build.py` ergänzt werden.
 
+## Suchmaschinen
+
+Die Demo enthält auf allen erzeugten HTML-Seiten (auch der Einstiegsweiterleitung) ein `robots`-Meta-Tag mit `noindex, nofollow`. Der Build erzeugt zusätzlich eine `robots.txt`, die sowohl im Docker-Image als auch im GitHub-Pages-Artefakt enthalten ist. Sie erlaubt das Abrufen bewusst: Ein `Disallow` würde Suchmaschinen daran hindern, das `noindex` zu lesen.
+
+Bei GitHub-Pages-Projektseiten liegt diese Datei unter dem Projektpfad; Suchmaschinen beachten aber nur `/robots.txt` an der Domain-Wurzel. Die Meta-Tags funktionieren auch unter einem Projektpfad. Bei einer eigenen Domain liegt die erzeugte Datei direkt an der Domain-Wurzel.
+
+Diese Hinweise gelten für kooperative Suchmaschinen und ersetzen keine Zugangskontrolle. Das öffentliche GitHub-Repository und dessen Historie bleiben unabhängig davon einsehbar und potenziell indexierbar.
+
 ## Build und Tests
 
 ```sh
-docker build -f .github/docker/Dockerfile -t dynamesh-website .
-docker run --rm -p 8080:80 dynamesh-website
+docker build -f .github/docker/Dockerfile -t static-website .
+docker run --rm -p 8080:80 static-website
 # http://localhost:8080/en/ und http://localhost:8080/de/
 ```
 
-Der Docker-Build führt fünfzehn Regressionstests mit unabhängigen Testdaten aus, bevor er die Website generiert. Der bestehende GitHub-Pages-Workflow nutzt dasselbe Dockerfile. Ungültige Slugs, fehlende Titel, leere Inhalte und fehlende Startseiten lassen den Build fehlschlagen.
+Der Docker-Build führt sechzehn Regressionstests mit unabhängigen Testdaten aus, bevor er die Website generiert. Der bestehende GitHub-Pages-Workflow nutzt dasselbe Dockerfile. Ungültige Slugs, fehlende Titel, leere Inhalte und fehlende Startseiten lassen den Build fehlschlagen.

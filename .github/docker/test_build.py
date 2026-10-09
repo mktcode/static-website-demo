@@ -39,6 +39,18 @@ class BuildTests(unittest.TestCase):
             self.assertNotIn("{{", html)
         self.assertTrue((output / "content/media/hero.jpg").is_file())
 
+    def test_search_engine_indexing_disabled(self):
+        self.page("en", "about")
+        self.page("de", "about")
+        build(self.root)
+        output = self.root / "_site"
+        for path in output.rglob("*.html"):
+            with self.subTest(page=path.relative_to(output)):
+                self.assertIn('<meta name="robots" content="noindex, nofollow">', path.read_text())
+        robots = (output / "robots.txt").read_text()
+        self.assertIn("User-agent: *\nAllow: /\n", robots)
+        self.assertNotIn("Disallow:", robots)
+
     def test_new_pages_and_translation_links(self):
         self.page("en", "about", "About &amp; more")
         self.page("de", "about", "Über uns")

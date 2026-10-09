@@ -131,8 +131,16 @@ def build(root=Path(".")):
     (output / "index.html").write_text(
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         f'<meta http-equiv="refresh" content="0; url={DEFAULT_LOCALE}/">'
+        '<meta name="robots" content="noindex, nofollow">'
         '<title>DynaMesh</title></head><body>'
         f'<a href="{DEFAULT_LOCALE}/">Continue / Weiter</a></body></html>\n', encoding="utf-8",
+    )
+    # Allow fetching so crawlers can read the noindex meta tags. A robots.txt
+    # under a GitHub Pages project path is not authoritative for the domain.
+    (output / "robots.txt").write_text(
+        "# Demo: indexing is disabled by robots meta tags in every HTML page.\n"
+        "# Allow fetching so crawlers can read those tags.\n"
+        "User-agent: *\nAllow: /\n", encoding="utf-8",
     )
     (output / ".nojekyll").touch()
     shutil.copytree(root / "content" / "media", output / "content" / "media")
