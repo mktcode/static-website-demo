@@ -1,5 +1,5 @@
 ---
-title: Über Uns
+title: Über FEG
 hero_image: /content/media/hero-grey.jpg
 hero_alt: ''
 ---
