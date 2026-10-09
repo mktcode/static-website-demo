@@ -1,5 +1,5 @@
 ---
-title: Über uns
+title: Über Uns
 hero_image: /content/media/hero-grey.jpg
 hero_alt: ''
 ---
